@@ -1,0 +1,132 @@
+openssl_conf=openssl_def
+HOME                    = .
+RANDFILE                = $ENV::HOME/.rnd
+oid_section             = new_oids
+[ new_oids ]
+tsa_policy1 = 1.2.3.4.1
+tsa_policy2 = 1.2.3.4.5.6
+tsa_policy3 = 1.2.3.4.5.7
+[ ca ]
+default_ca      = CA_default
+[ CA_default ]
+dir             = ./demoCA
+certs           = $dir/certs
+crl_dir         = $dir/crl
+database        = $dir/index.txt
+
+new_certs_dir   = $dir/newcerts
+certificate     = $dir/cacert.pem
+serial          = $dir/serial
+crlnumber       = $dir/crlnumber
+
+crl             = $dir/crl.pem
+private_key     = $dir/private/cakey.pem
+RANDFILE        = $dir/private/.rand
+x509_extensions = usr_cert
+name_opt        = ca_default
+cert_opt        = ca_default
+default_days    = 365
+default_crl_days= 30
+default_md      = default
+preserve        = no
+policy          = policy_match
+[ policy_match ]
+countryName             = match
+stateOrProvinceName     = match
+organizationName        = match
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+[ policy_anything ]
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+[ req ]
+default_bits            = 2048
+default_keyfile         = privkey.pem
+distinguished_name      = req_distinguished_name
+attributes              = req_attributes
+req_extensions = v3_req
+x509_extensions = v3_ca
+string_mask = utf8only
+[ req_distinguished_name ]
+countryName                     = Country Name (2 letter code)
+countryName_default             = RU
+countryName_min                 = 2
+countryName_max                 = 2
+stateOrProvinceName             = State or Province Name (full name)
+stateOrProvinceName_default     = Moscow region
+localityName                    = Locality Name (eg, city)
+localityName_default            = Moscow
+0.organizationName              = Organization Name (eg, company)
+0.organizationName_default      = JSC Example
+organizationalUnitName          = Organizational Unit Name (eg, section)
+organizationalUnitName_default  = It Department
+commonName                      = Common Name (e.g. server FQDN or YOUR name)
+commonName_max                  = 64
+emailAddress                    = Email Address
+emailAddress_max                = 64
+[ req_attributes ]
+challengePassword               = A challenge password
+challengePassword_min           = 4
+challengePassword_max           = 20
+unstructuredName                = An optional company name
+[ v3_req ]
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = example.com
+DNS.2 = www.example.com
+DNS.3 = *.example.com
+
+[ usr_cert ]
+basicConstraints=CA:FALSE
+nsComment                       = "OpenSSL Generated Certificate"
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+[ v3_ca ]
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer
+basicConstraints = CA:true
+[ crl_ext ]
+authorityKeyIdentifier=keyid:always
+[ proxy_cert_ext ]
+basicConstraints=CA:FALSE
+nsComment                       = "OpenSSL Generated Certificate"
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+proxyCertInfo=critical,language:id-ppl-anyLanguage,pathlen:3,policy:foo
+[ tsa ]
+default_tsa = tsa_config1
+[ tsa_config1 ]
+dir             = ./demoCA
+serial          = $dir/tsaserial
+crypto_device   = builtin
+signer_cert     = $dir/tsacert.pem
+
+certs           = $dir/cacert.pem
+
+signer_key      = $dir/private/tsakey.pem
+default_policy  = tsa_policy1
+
+other_policies  = tsa_policy2, tsa_policy3
+digests         = md5, sha1
+accuracy        = secs:1, millisecs:500, microsecs:100
+clock_precision_digits  = 0
+ordering                = yes
+
+tsa_name                = yes
+
+ess_cert_id_chain       = no
+
+[openssl_def]
+engines = engine_section
+[engine_section]
+gost = gost_section
+[gost_section]
+engine_id = gost
+default_algorithms = ALL
+CRYPT_PARAMS = id-Gost28147-89-CryptoPro-A-ParamSet
