@@ -5,21 +5,21 @@
 FROM debian:jessie
 MAINTAINER LiquidPredator <liquidpredator@gmail.com>
 	
-RUN apt-get update																			&& \
-	apt-get install -y wget openssl															&& \
-	echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list		&& \
+RUN 	apt-get update										&& \
+	apt-get install -y wget openssl								&& \
+	echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list	&& \
 	echo "deb-src http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list	&& \
-	cd ~																					&& \
-	wget http://nginx.org/keys/nginx_signing.key											&& \
-	apt-key add nginx_signing.key															&& \
-	rm nginx_signing.key																	&& \
-	apt-get update																			&& \
-	apt-get install -y nginx																&& \
-	apt clean && rm -rf /var/lib/apt/lists/*    											&& \
+	cd ~											&& \
+	wget http://nginx.org/keys/nginx_signing.key						&& \
+	apt-key add nginx_signing.key								&& \
+	rm nginx_signing.key									&& \
+	apt-get update										&& \
+	apt-get install -y nginx								&& \
+	apt clean && rm -rf /var/lib/apt/lists/*    						&& \
 	service nginx stop
 
-RUN	touch ~/.rnd							&& \
-	mkdir -p /etc/nginx/certs/rsa			&& \
+RUN	touch ~/.rnd			&& \
+	mkdir -p /etc/nginx/certs/rsa	&& \
 	mkdir -p /etc/nginx/certs/gost
 	
 COPY ./confs/nginx.conf /etc/nginx/nginx.conf
